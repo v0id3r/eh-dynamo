@@ -25,6 +25,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	"github.com/guregu/dynamo"
 	eh "github.com/looplab/eventhorizon"
 )
@@ -82,6 +83,14 @@ func NewEventStore(config *EventStoreConfig) (*EventStore, error) {
 	return s, err
 }
 
+func NewEventStoreFromIface(db dynamodbiface.DynamoDBAPI, config *EventStoreConfig) *EventStore {
+	config.provideDefaults()
+
+	return &EventStore{
+		service: dynamo.NewFromIface(db),
+		config: config,
+	}
+}
 // Save implements the Save method of the eventhorizon.EventStore interface.
 func (s *EventStore) Save(ctx context.Context, events []eh.Event, originalVersion int) error {
 	if len(events) == 0 {

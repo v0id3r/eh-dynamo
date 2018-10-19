@@ -20,6 +20,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	"github.com/guregu/dynamo"
 
 	eh "github.com/looplab/eventhorizon"
@@ -70,6 +71,15 @@ func NewRepo(config *RepoConfig) (*Repo, error) {
 		service: db,
 		config:  config,
 	}, nil
+}
+
+func NewRepoFromIface(db dynamodbiface.DynamoDBAPI, config *RepoConfig) *Repo {
+	config.provideDefaults()
+
+	return &Repo{
+		service: dynamo.NewFromIface(db),
+		config:  config,
+	}
 }
 
 // Parent implements the Parent method of the eventhorizon.ReadRepo interface.
