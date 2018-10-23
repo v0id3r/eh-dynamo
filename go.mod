@@ -1,4 +1,4 @@
-module github.com/v0id3r/eh-dynamo
+module github.com/seedboxtech/eh-dynamo
 
 require (
 	github.com/aws/aws-sdk-go v1.15.58
